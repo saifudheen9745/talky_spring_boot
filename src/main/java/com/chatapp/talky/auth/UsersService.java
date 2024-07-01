@@ -1,5 +1,7 @@
 package com.chatapp.talky.auth;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +30,7 @@ public class UsersService {
         return this.usersRepository.save(registerDetails);    
     }
 
-    public String loginUser(Users loginDetails){
+    public Map<String, String> loginUser(Users loginDetails){
         if(loginDetails.getEmail().isBlank() || loginDetails.getPassword().isBlank()){
             throw new IllegalArgumentException("Require all the fields");
         }
@@ -39,8 +41,13 @@ public class UsersService {
         boolean isCorrectPass = this.comparePassword(loginDetails.getPassword(), user.get().getPassword());
         if(!isCorrectPass){
             throw new IllegalArgumentException("Invalid Credentials");   
-        }  
-        return this.jwtService.createJwtAccessToken(user.get().getId().toString(), user.get().getEmail());
+        } 
+        Map<String, String> data = new HashMap<>(); 
+        String token = this.jwtService.createJwtAccessToken(user.get().getId().toString(), user.get().getEmail());
+        data.put("token", token);
+        data.put("name",user.get().getName());
+        data.put("email",user.get().getEmail());
+        return data;
     }
 
     public boolean comparePassword(String rawPass, String encodedPass){

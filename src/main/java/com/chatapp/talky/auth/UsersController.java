@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,10 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.chatapp.talky.HttpResponse;
 
-
-
 @RestController
 @RequestMapping(path="/api/v1/user/auth", produces=MediaType.APPLICATION_JSON_VALUE)
+@CrossOrigin(origins="http://localhost:4300")
 public class UsersController {
 
     @Autowired
@@ -45,10 +45,8 @@ public class UsersController {
     @PostMapping("/login")
     public ResponseEntity<HttpResponse> loginUser(@RequestBody Users loginDetails) {
         try {
-            String token = this.usersService.loginUser(loginDetails);
-            if(token != null && !token.isEmpty()){
-                Map<String, String> data = new HashMap<>();
-                data.put("token", token);
+            Map<String, String> data = this.usersService.loginUser(loginDetails);
+            if(data != null && !data.isEmpty()){
                 return new ResponseEntity<>(new HttpResponse<>("User logged In successfully", true, List.of(data)), HttpStatus.CREATED);
             }else{
                 throw new IllegalArgumentException("User login failed");
