@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chatapp.talky.HttpResponse;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RequestMapping(path="/api/v1/user/auth", produces=MediaType.APPLICATION_JSON_VALUE)
@@ -35,8 +36,7 @@ public class UsersController {
             }else{
                 throw new IllegalArgumentException("User creation failed");
             }
-        } catch (Exception e) {
-            System.out.println("e");
+        } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(new HttpResponse<>(e.getMessage(), false, List.of()), HttpStatus.BAD_REQUEST);
         }
     }
@@ -47,14 +47,26 @@ public class UsersController {
         try {
             Map<String, String> data = this.usersService.loginUser(loginDetails);
             if(data != null && !data.isEmpty()){
-                return new ResponseEntity<>(new HttpResponse<>("User logged In successfully", true, List.of(data)), HttpStatus.CREATED);
+                return new ResponseEntity<>(new HttpResponse<>("User logged In successfully", true, List.of(data)), HttpStatus.OK);
             }else{
                 throw new IllegalArgumentException("User login failed");
             }
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(new HttpResponse<>(e.getMessage(), false, List.of()), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @SuppressWarnings("rawtypes")
+    @GetMapping("/users")
+    public ResponseEntity<HttpResponse> getAllUsers() {
+        try {
+            List<Users> users = this.usersService.getUsers();
+            return new ResponseEntity<>(new HttpResponse<>("Users List", true, users), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new HttpResponse<>(e.getMessage(), false, List.of()), HttpStatus.BAD_REQUEST);
         }
     }
+    
     
 
 }

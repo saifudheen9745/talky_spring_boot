@@ -1,6 +1,7 @@
 package com.chatapp.talky.auth;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -47,7 +48,18 @@ public class UsersService {
         data.put("token", token);
         data.put("name",user.get().getName());
         data.put("email",user.get().getEmail());
+        data.put("id",user.get().getId().toString());
         return data;
+    }
+
+    public List<Users> getUsers(){
+        List<Users> users = null;
+        try{
+            users = this.usersRepository.findAll();
+        }catch(Exception e){
+            throw new IllegalArgumentException(e.getMessage());
+        }
+        return users;
     }
 
     public boolean comparePassword(String rawPass, String encodedPass){
