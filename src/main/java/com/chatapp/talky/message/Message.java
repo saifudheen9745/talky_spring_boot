@@ -1,32 +1,52 @@
 package com.chatapp.talky.message;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+
+@Entity
+@Table
 public class Message {
 
+    @Id
+    @SequenceGenerator(
+        initialValue=1,
+        allocationSize=1,
+        name="message_id_sequence",
+        sequenceName="message_id_sequence"
+    )
+    @GeneratedValue(
+        strategy=GenerationType.SEQUENCE,
+        generator="message_id_sequence"
+    )
     private Long id;
     private Long date;
-    private String from;
-    private String to;
+    private String msgFrom;
+    private String msgTo;
     private String message;
     private String room;
 
     public Message() {
     }
 
-    public Message(Long date, String from, Long id, String message, String room, String to) {
+    public Message(Long date, String msgFrom, Long id, String message, String room, String msgTo) {
         this.date = date;
-        this.from = from;
+        this.msgFrom = msgFrom;
         this.id = id;
         this.message = message;
         this.room = room;
-        this.to = to;
+        this.msgTo = msgTo;
     }
 
-    public Message(Long date, String from, String message, String room, String to) {
+    public Message(Long date, String msgFrom, String message, String room, String msgTo) {
         this.date = date;
-        this.from = from;
+        this.msgFrom = msgFrom;
         this.message = message;
         this.room = room;
-        this.to = to;
+        this.msgTo = msgTo;
     }
 
     public Long getId() {
@@ -45,20 +65,20 @@ public class Message {
         this.date = date;
     }
 
-    public String getFrom() {
-        return from;
+    public String getmsgFrom() {
+        return msgFrom;
     }
 
-    public void setFrom(String from) {
-        this.from = from;
+    public void setmsgFrom(String msgFrom) {
+        this.msgFrom = msgFrom;
     }
 
-    public String getTo() {
-        return to;
+    public String getmsgTo() {
+        return msgTo;
     }
 
-    public void setTo(String to) {
-        this.to = to;
+    public void setmsgTo(String msgTo) {
+        this.msgTo = msgTo;
     }
 
     public String getMessage() {
